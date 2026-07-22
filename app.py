@@ -402,11 +402,13 @@ with tab_stats:
     with col_b:
         st.subheader("Casa dominante (moda y frecuencias)")
         frecuencias = logica.tabla_frecuencias(puntajes["Casa_dominante"].tolist())
-        moda = logica.moda_propia(puntajes["Casa_dominante"].tolist())
-        st.markdown(
-            f"Casa mas frecuente (moda): {estilo.badge_casa_html(moda)}" if moda else "Sin datos suficientes.",
-            unsafe_allow_html=True,
-        )
+        modas = logica.moda_propia(puntajes["Casa_dominante"].tolist())
+        if modas:
+            etiqueta = "Casas mas frecuentes (moda)" if len(modas) > 1 else "Casa mas frecuente (moda)"
+            badges = " ".join(estilo.badge_casa_html(casa) for casa in modas)
+            st.markdown(f"{etiqueta}: {badges}", unsafe_allow_html=True)
+        else:
+            st.markdown("Sin datos suficientes.", unsafe_allow_html=True)
         tabla_frec = frecuencias.reset_index()
         tabla_frec.columns = ["Casa", "Respondientes"]
         fig_frec = px.bar(
@@ -454,23 +456,56 @@ with tab_train:
     if "modelo_entrenado" not in st.session_state:
         st.session_state.modelo_entrenado = False
 
-    if st.button("Susurrarle al Sombrero: entrenar modelo"):
-        with st.spinner("Dificil… muy dificil… el Sombrero esta pensando…"):
-            time.sleep(1.2)
-            escalador, kmeans, pca, etiquetas, coords_pca = logica.entrenar_kmeans(X, k)
-        st.session_state.modelo_entrenado = True
-        st.session_state.k_entrenado = k
-        st.session_state.escalador = escalador
-        st.session_state.kmeans = kmeans
-        st.session_state.pca = pca
-        st.session_state.etiquetas = etiquetas
-        st.session_state.coords_pca = coords_pca
-        st.session_state.puntajes = puntajes
-        st.session_state.df_filtrado = df_filtrado
-        st.success(f"El Sombrero termino de ordenar a {len(df_filtrado)} aspirantes en {k} casas.")
 
-    if not st.session_state.modelo_entrenado:
-        st.info("Presiona el boton para entrenar el modelo y habilitar las pestañas de Resultados y Descargas.")
+
+    if st.button("Susurrarle al Sombrero: entrenar modelo"):
+        if k > len(df_filtrado):
+            st.markdown(
+                estilo.advertencia_html(
+                    titulo="🎩 El Sombrero no puede continuar...",
+                    mensaje=(
+                        f"Tienes solo <b>{len(df_filtrado)}</b> aspirante(s) frente a él, pero le pides "
+                        f"repartirlos en <b>{k}</b> casas. Ni con toda la magia de Hogwarts puede formar "
+                        "mas casas que aspirantes hay disponibles.<br><br>"
+                        "Reduce el numero de clusters (k) o amplia tu seleccion de aspirantes con los "
+                        "filtros de la barra lateral, e intenta de nuevo."
+                    ),
+                ),
+                unsafe_allow_html=True,
+            )
+        else:
+            with st.spinner("Dificil… muy dificil… el Sombrero esta pensando…"):
+                time.sleep(1.2)
+                escalador, kmeans, pca, etiquetas, coords_pca = logica.entrenar_kmeans(X, k)
+            st.session_state.modelo_entrenado = True
+            st.session_state.k_entrenado = k
+            st.session_state.escalador = escalador
+            st.session_state.kmeans = kmeans
+            st.session_state.pca = pca
+            st.session_state.etiquetas = etiquetas
+            st.session_state.coords_pca = coords_pca
+            st.session_state.puntajes = puntajes
+            st.session_state.df_filtrado = df_filtrado
+            st.success(f"El Sombrero termino de ordenar a {len(df_filtrado)} aspirantes en {k} casas.")   
+
+    # if st.button("Susurrarle al Sombrero: entrenar modelo"):
+    #    with st.spinner("Dificil… muy dificil… el Sombrero esta pensando…"):
+    #        time.sleep(1.2)
+    #        escalador, kmeans, pca, etiquetas, coords_pca = logica.entrenar_kmeans(X, k)
+    #    st.session_state.modelo_entrenado = True
+    #    st.session_state.k_entrenado = k
+    #    st.session_state.escalador = escalador
+    #    st.session_state.kmeans = kmeans
+    #    st.session_state.pca = pca
+    #    st.session_state.etiquetas = etiquetas
+    #    st.session_state.coords_pca = coords_pca
+    #   st.session_state.puntajes = puntajes
+    #    st.session_state.df_filtrado = df_filtrado
+    #    st.success(f"El Sombrero termino de ordenar a {len(df_filtrado)} aspirantes en {k} casas.")
+
+    #if not st.session_state.modelo_entrenado:
+    #    st.info("Presiona el boton para entrenar el modelo y habilitar las pestañas de Resultados y Descargas.")
+
 
 # ===========================================================================
 # TAB 4: RESULTADOS
@@ -575,7 +610,7 @@ with tab_individual:
     casa_img_map = {
         "Gryffindor": "gryffindor.png",
         "Hufflepuff": "hufflepuff.png",
-        "Ravenclaw": "revenclaw.png",
+        "Ravenclaw": "ravenclaw.png",
         "Slytherin": "slytherin.png"
     }
 
