@@ -299,14 +299,17 @@ def desviacion_estandar_propia(valores: List[float]) -> float:
     return varianza ** 0.5
 
 
-def moda_propia(valores: List) -> object:
+def moda_propia(valores: List) -> List:
+    """Devuelve TODOS los valores empatados en la frecuencia maxima
+    (soporta resultados unimodales, bimodales, trimodales, etc.)."""
     valores = [v for v in valores if v is not None and not (isinstance(v, float) and pd.isna(v))]
     if not valores:
-        return None
+        return []
     conteo: Dict[object, int] = {}
     for v in valores:
         conteo[v] = conteo.get(v, 0) + 1
-    return max(conteo.items(), key=lambda kv: kv[1])[0]
+    frecuencia_max = max(conteo.values())
+    return [valor for valor, freq in conteo.items() if freq == frecuencia_max]
 
 
 def tabla_frecuencias(valores: List) -> pd.Series:

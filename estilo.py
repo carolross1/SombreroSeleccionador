@@ -453,3 +453,31 @@ def veredicto_html(casa: str, subtitulo: str = "") -> str:
         <div style="color:#e8dcc0; font-style: italic; font-size: 1.1rem;">{subtitulo}</div>
     </div>
     """
+
+def advertencia_html(mensaje: str, titulo: str = "El Sombrero no puede continuar...") -> str:
+    return f"""
+    <div style="
+        background: linear-gradient(135deg, #2b1810, #1c0f0a);
+        border: 3px solid #c9a227;
+        border-radius: 14px;
+        padding: 1.4rem 1.6rem;
+        text-align: center;
+        box-shadow: 0 0 25px rgba(201,162,39,0.35), inset 0 0 20px rgba(0,0,0,0.4);
+        margin: 1rem 0;
+    ">
+        <div style="font-size: 2.2rem;">🪄</div>
+        <div style="
+            font-family: 'Cinzel Decorative', serif;
+            color: #e8c96a;
+            font-size: 1.3rem;
+            margin: 0.4rem 0;
+            text-shadow: 0 0 10px rgba(201,162,39,0.5);
+        ">{titulo}</div>
+        <div style="
+            font-family: 'Cinzel', serif;
+            color: #f4ecd8;
+            font-size: 1rem;
+            line-height: 1.6;
+        ">{mensaje}</div>
+    </div>
+    """
