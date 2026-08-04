@@ -38,7 +38,7 @@ import streamlit as st
 import estilo
 import logica
 
-st.set_page_config(page_title="El Sombrero Seleccionador — Análisis No Supervisado", page_icon="🎩", layout="wide")
+st.set_page_config(page_title="El Sombrero Seleccionador — Análisis No Supervisado", page_icon="", layout="wide")
 st.markdown(estilo.CSS, unsafe_allow_html=True)
 
 # Encabezado principal y reproducción automática del video local Sombrero.mp4

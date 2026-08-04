@@ -406,7 +406,7 @@ def bienvenida_html() -> str:
     return """
     <div class="hp-pergamino" style="text-align: center; max-width: 700px; margin: 2rem auto;">
         <h3 style="font-family: 'Cinzel Decorative', serif; color: #2b2117 !important; margin-bottom: 1rem;">
-            🎩 Bienvenidos a la Ceremonia de Selección
+             Bienvenidos a la Ceremonia de Selección
         </h3>
         <p style="margin-bottom: 1rem; line-height: 1.6;">
             Para dar inicio al análisis de las respuestas del cuestionario y revelar los grupos ocultos 
@@ -448,7 +448,7 @@ def veredicto_html(casa: str, subtitulo: str = "") -> str:
     emoji = logica.EMOJIS.get(casa, "")
     return f"""
     <div class="hp-veredicto" style="background: radial-gradient(circle at top, {color}, #100c08 85%);">
-        <div class="sombrero">🎩</div>
+        <div class="sombrero"></div>
         <div class="titulo" style="color:#f4ecd8;">{emoji} ¡{casa.upper()}! {emoji}</div>
         <div style="color:#e8dcc0; font-style: italic; font-size: 1.1rem;">{subtitulo}</div>
     </div>
